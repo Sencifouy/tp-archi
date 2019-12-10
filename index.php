@@ -1,3 +1,8 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+?>
 <!doctype html> 
 <html>
 	<head> 
@@ -60,15 +65,25 @@
 				$liste=mysqli_fetch_array($res);
 				$nbpages=ceil($nbcomm/$commparpage); /*Ceil arrondit a l'entier supérieur*/
 				echo "<br> Pages : ";
-				echo "<a href='commentaires.php?page=1'> << </a>";
-				echo "<a href='commentaires.php?page=(".($page-1).")'> < </a>";
-				for($i=($page-2);$i<=($page+2);$i++)
+				if($page > 1){
+					if ($page >2) {
+						echo "<a href='".$_SERVER['PHP_SELF']."?page=1'> << </a>";
+					}
+					echo "<a href='".$_SERVER['PHP_SELF']."?page=".($page-1)."'> < </a>";
+				}
+				$downLimit = $page > 2 ? $page-2 : 1;
+				$upLimit = $nbpages - 2 > $page ? $page + 2 : $nbpages;
+				for($i=$downLimit;$i<=$upLimit;$i++)
 				{
-					echo "<a href='commentaires.php?page=$i'> $i </a>";
+					echo "<a href='".$_SERVER["PHP_SELF"]."?page=$i'> $i </a>";
+				}
+				if($page  < $nbpages){
+					echo "<a href='".$_SERVER['PHP_SELF']."?page=".($page+1)."'> > </a>";
+					if($page + 1 < $nbpages){
+						echo "<a href='".$_SERVER['PHP_SELF']."?page=$nbpages'> >> </a>";		
+					}
 				}
 			}
-			echo "<a href='commentaires.php?page=".($page+1)."'> > </a>";
-			echo "<a href='commentaires.php?page=$nbpages'> >> </a>";
 			
 			mysqli_close($lien);
 		?>																			
